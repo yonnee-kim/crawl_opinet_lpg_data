@@ -216,7 +216,7 @@ def crawl_for_sido(sido_name, project_dir, sidosigun_code, code_start_time):
                 continue
             time.sleep(1)
             # 시군란 입력       
-            sigun = WebDriverWait(driver, 60).until(
+            sigun = WebDriverWait(driver, 10).until(
                 EC.presence_of_element_located((By.XPATH, '//*[@id="SIGUNGU_NM0"]'))
             )
             Select(sigun).select_by_visible_text(sigun_name) # 시군 네임 입력
@@ -264,6 +264,7 @@ def crawl_for_sido(sido_name, project_dir, sidosigun_code, code_start_time):
                 excel_file_name = os.listdir(download_dir)[0]
                 excel_file_path = os.path.join(download_dir, excel_file_name)
                 os.remove(excel_file_path)
+            time.sleep(1)
             # 엑셀 다운로드
             excel_download_button = WebDriverWait(driver, 10).until(
                 EC.element_to_be_clickable((By.XPATH, '//*[@id="templ_list0"]/div[6]/div/a')) 
@@ -275,7 +276,7 @@ def crawl_for_sido(sido_name, project_dir, sidosigun_code, code_start_time):
             while True :
                 trycount += 1
                 file_list = os.listdir(download_dir)  # 리스트를 변수에 저장
-                excel_file_name = ''
+                extension = ''
                 if file_list:  # 파일이 있는 경우
                     excel_file_name = file_list[0]
                     if '.' in excel_file_name:  # 확장자가 있는지 확인
@@ -289,7 +290,7 @@ def crawl_for_sido(sido_name, project_dir, sidosigun_code, code_start_time):
                     break
                 time.sleep(0.1)
             if retry :
-                print(f"엑셀 파일 다운로드 중 오류 발생. 확장자명 : {extension}")
+                print(f"{sido_name} {sigun_name} 엑셀 파일 다운로드 중 오류 발생. 확장자명 : {extension}")
                 driver.quit()
                 time.sleep(1)
                 driver = webdriver.Chrome(options=chrome_options)
